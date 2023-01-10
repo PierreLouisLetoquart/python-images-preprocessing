@@ -5,7 +5,7 @@ Ce code a pour but de pretraiter un ensemble d'images en vue de leur utilisation
 ## Prerequis
 
 - Avoir Python 3 installe sur votre ordinateur
-- Avoir installe les bibliotheques `skimage`, `sklearn`, et `csv` en utilisant la commande `pip install skimage sklearn csv`
+- Avoir installe les bibliotheques `skimage`, `sklearn`, et `csv` en utilisant la commande `pip install scikit-image sklearn csv`
 
 ## Comment utiliser ce code
 
