@@ -1,6 +1,6 @@
 # Prétraitement des images avec TensorFlow
 
-Ce code utilise TensorFlow pour charger des images à partir d'un répertoire "dataset" et les prétraiter en les redimensionnant à une taille de 100x100 pixels, en les normalisant (en divisant chaque pixel par 255) et en les convertissant en format entier 8 bits non signé (uint8). Les images prétraitées sont ensuite enregistrées dans un répertoire "dataset/preprocessed".
+Ce code utilise TensorFlow pour charger des images à partir d'un répertoire `dataset` et les prétraiter en les redimensionnant à une taille de **100x100** pixels, en les **normalisant** (en divisant chaque pixel par 255) et en les convertissant en format entier 8 bits non signé (uint8). Les images prétraitées sont ensuite enregistrées dans un répertoire `dataset/preprocessed/`.
 
 ## Prérequis
 
@@ -32,10 +32,10 @@ Assurez-vous que vous avez un fichier `labels.json` qui contient des information
 
 Les images doivent être stockées dans le répertoire `dataset/` et doivent avoir les extensions spécifiées dans le fichier `labels.json`.
 
-**Exécutez le script app.py :**
+**Exécutez le script :**
 
 ```bash
-python app.py
+python preprocess.py
 ```
 
 Le code créera automatiquement un répertoire `dataset/preprocessed` pour stocker les images prétraitées.
