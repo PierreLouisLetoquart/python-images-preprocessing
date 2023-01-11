@@ -1,48 +1,24 @@
-import csv
-from skimage import io
-from skimage.transform import resize
-from sklearn.preprocessing import normalize
-from skimage.filters import median_filter
-import os
+import json
+import tensorflow as tf
 
-def preprocess_image(image_name, image_label):
-    # Charger l'image à partir du fichier
-    image = io.imread(f"dataset/{image_name}")
+# Charger les étiquettes à partir du fichier labels.json
+with open("labels.json", "r") as f:
+    labels = json.load(f)
 
-    # Redimensionner l'image à une taille de 200x200 pixels
-    image_resized = resize(image, (200, 200))
+# Boucle pour chaque image
+for image_data in labels:
+    # Construire le chemin d'accès à l'image
+    image_path = "dataset/" + image_data["image"] + "." + image_data["extension"]
 
-    # Normaliser les valeurs de pixel de l'image
-    image_normalized = normalize(image_resized)
+    # Charger l'image à l'aide de TensorFlow
+    image_string = tf.io.read_file(image_path)
+    image = tf.image.decode_jpeg(image_string)
 
-    # Appliquer un filtre de médian pour enlever le bruit de l'image
-    image_filtered = median_filter(image_normalized)
-
-    return image_filtered
-
-# Ouvrir le fichier CSV en mode lecture
-with open('label.csv', mode='r') as csv_file:
-    csv_reader = csv.reader(csv_file)
+    # Prétraitement de l'image
+    image = tf.image.resize(image, (100, 100))
+    image = tf.cast(image, dtype=tf.float32) / 255.0
+    image = tf.cast(image * 255, dtype=tf.uint8)
     
-    # Créer un dossier pour enregistrer les images nettoyées s'il n'existe pas déjà
-    if not os.path.exists("dataset_cleaned"):
-        os.makedirs("dataset_cleaned")
-
-    # Ouvrir le fichier CSV pour les étiquettes en mode ajout
-    with open("dataset_cleaned/labels.csv", mode='a') as labels_file:
-        csv_writer = csv.writer(labels_file)
-
-        # Pour chaque ligne du fichier CSV
-        for row in csv_reader:
-            # Récupérer le nom de l'image et sa classe
-            image_name = row[0]
-            image_label = row[1]
-
-            # Prétraiter l'image
-            image_processed = preprocess_image(image_name, image_label)
-
-            # Enregistrer l'image nettoyée dans le dossier dataset_cleaned/
-            io.imsave(f"dataset_cleaned/{image_name}", image_processed)
-
-            # Enregistrer l'étiquette de l'image dans le fichier CSV des étiquettes
-            csv_writer.writerow([image_name, image_label])
+    # Enregistrer l'image prétraitée dans le dossier "dataset/preprocessed"
+    preprocessed_path = "dataset/preprocessed/" + image_data["image"] + "." + image_data["extension"]
+    tf.io.write_file(preprocessed_path, tf.image.encode_jpeg(image))
